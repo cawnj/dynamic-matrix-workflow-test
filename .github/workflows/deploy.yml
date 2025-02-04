@@ -19,5 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment}}
     steps:
-      - name: Echo environment
-        run: echo "Deploying to ${{ inputs.environment }}"
+      - name: Check if environment exists
+        run: |
+          ENV_EXISTS=$(curl -s \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/environments/${{ inputs.environment }}" \
+            | jq -r '.name // empty')
+
+          if [ -z "$ENV_EXISTS" ]; then
+            echo "::error::Environment '${{ inputs.environment }}' does not exist in GitHub"
+            exit 1
+          fi
+
+      - name: Echo success
+        run: echo "Deployed to ${{ inputs.environment }}"
