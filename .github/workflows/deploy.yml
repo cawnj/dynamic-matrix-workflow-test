@@ -7,11 +7,17 @@ on:
         description: 'Environment to deploy to'
         type: environment
         required: true
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        type: string
+        required: true
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        environment: ${{ inputs.environment}}
-        steps:
-        - name: Echo environment
-          run: echo "Deploying to ${{ inputs.environment }}"
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment}}
+    steps:
+      - name: Echo environment
+        run: echo "Deploying to ${{ inputs.environment }}"
