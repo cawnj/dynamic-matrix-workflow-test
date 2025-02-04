@@ -18,19 +18,25 @@ jobs:
         run: |
           # Get requested environments array
           IFS=',' read -ra REQUESTED <<< "${{ inputs.environments }}"
+          echo "Requested environments: ${REQUESTED[@]}"
 
           # Get existing environments from GitHub API
-          EXISTING=$(gh api repos/${{ github.repository }}/environments --jq '.[].name')
+          EXISTING=$(gh api repos/${{ github.repository }}/environments | jq -r '.environments[].name')
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to fetch environments from GitHub API"
+            exit 1
+          fi
+          echo "Existing environments: $EXISTING"
 
           # Check each requested environment exists
           for env in "${REQUESTED[@]}"; do
+            env=$(echo "$env" | tr -d ' ')  # Remove whitespace
             if ! echo "$EXISTING" | grep -q "^${env}$"; then
               echo "Error: Environment '$env' does not exist"
               exit 1
             fi
           done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "All requested environments exist"
 
       - id: set-matrix
         run: |
