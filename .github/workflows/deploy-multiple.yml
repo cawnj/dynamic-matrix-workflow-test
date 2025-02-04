@@ -37,7 +37,8 @@ jobs:
             fi
           done
 
-      - id: set-matrix
+      - name: Set matrix values
+        id: set-matrix
         run: |
           echo "environments=[$(echo ${{ inputs.environments }} | sed 's/,/","/g' | sed 's/^/"/;s/$/"/')]" >> $GITHUB_OUTPUT
 
