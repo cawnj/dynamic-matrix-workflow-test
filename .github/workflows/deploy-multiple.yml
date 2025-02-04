@@ -14,9 +14,26 @@ jobs:
     outputs:
       environments: ${{ steps.set-matrix.outputs.environments }}
     steps:
+      - name: Validate environments
+        run: |
+          # Get requested environments array
+          IFS=',' read -ra REQUESTED <<< "${{ inputs.environments }}"
+
+          # Get existing environments from GitHub API
+          EXISTING=$(gh api repos/${{ github.repository }}/environments --jq '.[].name')
+
+          # Check each requested environment exists
+          for env in "${REQUESTED[@]}"; do
+            if ! echo "$EXISTING" | grep -q "^${env}$"; then
+              echo "Error: Environment '$env' does not exist"
+              exit 1
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - id: set-matrix
         run: |
-          echo "environments=[$(echo ${{ inputs.environments }} | sed 's/,/","/g' | sed 's/^/"/;s/$/"/')]"
           echo "environments=[$(echo ${{ inputs.environments }} | sed 's/,/","/g' | sed 's/^/"/;s/$/"/')]" >> $GITHUB_OUTPUT
 
   deploy:
