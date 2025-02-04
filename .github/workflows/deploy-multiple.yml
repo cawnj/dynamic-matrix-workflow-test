@@ -16,6 +16,7 @@ jobs:
     steps:
       - id: set-matrix
         run: |
+          echo "environments=[$(echo ${{ inputs.environments }} | sed 's/,/","/g' | sed 's/^/"/;s/$/"/')]"
           echo "environments=[$(echo ${{ inputs.environments }} | sed 's/,/","/g' | sed 's/^/"/;s/$/"/')]" >> $GITHUB_OUTPUT
 
   deploy:
