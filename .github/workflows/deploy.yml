@@ -34,3 +34,7 @@ jobs:
 
       - name: Echo success
         run: echo "Deployed to ${{ inputs.environment }}"
+
+      - name: Show summary if success
+        if: success()
+        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
