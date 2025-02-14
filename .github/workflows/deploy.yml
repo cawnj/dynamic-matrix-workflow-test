@@ -37,4 +37,6 @@ jobs:
 
       - name: Show summary if success
         if: success()
-        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo '# 🚀 Deploy Success! 🚀' >> $GITHUB_STEP_SUMMARY
+          echo 'God speed, young warrior.' >> $GITHUB_STEP_SUMMARY
