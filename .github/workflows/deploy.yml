@@ -35,6 +35,9 @@ jobs:
       - name: Echo success
         run: echo "Deployed to ${{ inputs.environment }}"
 
+      - name: fail
+        run: exit 1
+
       - name: Show summary if success
         if: success()
         run: |
