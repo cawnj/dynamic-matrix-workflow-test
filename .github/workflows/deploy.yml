@@ -7,6 +7,11 @@ on:
         description: 'Environment to deploy to'
         type: environment
         required: true
+      use-cache:
+        description: "Use existing docker build cache?"
+        required: false
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       environment:
